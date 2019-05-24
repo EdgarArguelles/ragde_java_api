@@ -1,0 +1,89 @@
+fragment allRoleData on Role {
+    id
+    createdAt
+    updatedAt
+    name
+    description
+    permissions {
+        name
+    }
+    people {
+        fullName
+    }
+}
+
+query page {
+    rolePage(
+        pageDataRequest: {
+            page: 0
+            size: 3
+            sort: ["name", "id"]
+            direction: DESC
+            filters: [{ field: "name", operation: NE, value: "USER" }]
+        }
+    ) {
+        totalElements
+        totalPages
+        content {
+            id
+            name
+        }
+    }
+}
+
+query all {
+    roles {
+        id
+        name
+        people {
+            fullName
+        }
+    }
+}
+
+query byID {
+    role(id: 2) {
+        ...allRoleData
+    }
+}
+
+query byName {
+    roleByName(name: "ADMIN") {
+        ...allRoleData
+    }
+}
+
+mutation create {
+    createRole(
+        role: {
+            name: "ED"
+            description: "aaaaaaaaa"
+            permissions: [{ id: "1" }, { id: "2" }]
+            createdAt: "1999-01-30T00:00:00"
+            people: [{ id: "5555" }]
+        }
+    ) {
+        ...allRoleData
+    }
+}
+
+mutation update {
+    updateRole(
+        role: {
+            id: "2"
+            name: "RRRRRRRRR"
+            description: "eeeeeee"
+            permissions: [{ id: "1" }]
+            createdAt: "1999-01-30T00:00:00"
+            people: [{ id: "5555" }]
+        }
+    ) {
+        ...allRoleData
+    }
+}
+
+mutation delete {
+    deleteRole(id: 3) {
+        ...allRoleData
+    }
+}

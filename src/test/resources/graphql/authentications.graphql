@@ -1,0 +1,99 @@
+fragment allAuthenticationData on Authentication {
+    id
+    username
+    createdAt
+    updatedAt
+    authProvider {
+        id
+        name
+    }
+    person {
+        id
+        fullName
+    }
+}
+
+query page {
+    authenticationPage(
+        pageDataRequest: {
+            page: 0
+            size: 3
+            sort: ["username", "id"]
+            direction: DESC
+            filters: [
+                { field: "username", operation: NE, value: "user3" }
+                { field: "id", operation: GET, value: "2" }
+            ]
+        }
+    ) {
+        totalElements
+        totalPages
+        content {
+            id
+            username
+        }
+    }
+}
+
+query all {
+    authentications {
+        id
+        username
+    }
+}
+
+query byID {
+    authentication(id: 2) {
+        ...allAuthenticationData
+    }
+}
+
+query byUsername {
+    authenticationByUsername(username: "user3") {
+        ...allAuthenticationData
+    }
+}
+
+query byByAuthProviderAndPerson {
+    authenticationByAuthProviderAndPerson(
+        authProvider: { id: "1" }
+        person: { id: "1" }
+    ) {
+        ...allAuthenticationData
+    }
+}
+
+mutation create {
+    createAuthentication(
+        authentication: {
+            username: "edgar"
+            password: "eee"
+            createdAt: "1999-01-30T00:00:00"
+            authProvider: { id: "3" }
+            person: { id: "2" }
+        }
+    ) {
+        ...allAuthenticationData
+    }
+}
+
+mutation update {
+    updateAuthentication(
+        authentication: {
+            id: "2"
+            username: "edgar"
+            password: "aaaaa"
+            createdAt: "1999-01-30T00:00:00"
+            authProvider: { id: "33" }
+            person: { id: "5" }
+        }
+    ) {
+        ...allAuthenticationData
+    }
+}
+
+mutation delete {
+    deleteAuthentication(id: 2) {
+        ...allAuthenticationData
+    }
+}

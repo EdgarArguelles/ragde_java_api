@@ -1,0 +1,86 @@
+fragment allPermisionData on Permission {
+    id
+    name
+    description
+    createdAt
+    updatedAt
+    roles {
+        id
+        name
+        description
+    }
+}
+
+query page {
+    permissionPage(
+        pageDataRequest: {
+            page: 0
+            size: 3
+            sort: ["name", "id"]
+            direction: DESC
+            filters: [
+                { field: "name", operation: NE, value: "REMOVE_USERS" }
+                { field: "id", operation: GET, value: "3" }
+            ]
+        }
+    ) {
+        totalElements
+        totalPages
+        content {
+            id
+            name
+        }
+    }
+}
+
+query all {
+    permissions {
+        id
+        name
+    }
+}
+
+query byID {
+    permission(id: 5) {
+        ...allPermisionData
+    }
+}
+
+query byName {
+    permissionByName(name: "VIEW_ROLES") {
+        ...allPermisionData
+    }
+}
+
+mutation create {
+    createPermission(
+        permission: {
+            name: "ED2"
+            description: "ABC"
+            createdAt: "1999-01-30T00:00:00"
+            roles: [{ id: "5" }]
+        }
+    ) {
+        ...allPermisionData
+    }
+}
+
+mutation update {
+    updatePermission(
+        permission: {
+            id: "5"
+            name: "ED2"
+            description: "ABC"
+            createdAt: "1999-01-30T00:00:00"
+            roles: []
+        }
+    ) {
+        ...allPermisionData
+    }
+}
+
+mutation delete {
+    deletePermission(id: 7) {
+        ...allPermisionData
+    }
+}

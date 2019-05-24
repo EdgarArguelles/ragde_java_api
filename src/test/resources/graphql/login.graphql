@@ -1,0 +1,32 @@
+fragment allLoggedUserData on LoggedUser {
+    id
+    fullName
+    image
+    role
+    permissions
+    token
+}
+
+query admin {
+    login(credentials: { username: "user3", password: "123" }) {
+        ...allLoggedUserData
+    }
+}
+
+query user {
+    login(credentials: { username: "user2", password: "123" }) {
+        ...allLoggedUserData
+    }
+}
+
+query changeRole {
+    changeRole(roleId: "2") {
+        ...allLoggedUserData
+    }
+}
+
+query ping {
+    ping {
+        ...allLoggedUserData
+    }
+}

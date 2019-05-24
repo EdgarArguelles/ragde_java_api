@@ -1,0 +1,131 @@
+/**
+ * update gradle with the command: ./gradlew wrapper --gradle-version=5.4.1 --distribution-type=all
+ **/
+buildscript {
+    ext {
+        appVersion = "0.9.0"
+        appName = "ragde_java_api"
+        springBootVersion = "2.1.5.RELEASE"
+    }
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        //needed for org.springframework.boot plugin
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath('net.ltgt.gradle:gradle-apt-plugin:0.21') //needed for net.ltgt.apt-idea plugin
+    }
+}
+
+plugins {
+    id "idea" //when IntelliJ builds the project, save .class files in buildDir
+    //id "war" //uncomment to create a war instead of a jar
+    id "application" //for sourceCompatibility
+    id "jacoco" //junit code coverage
+    id "net.ltgt.apt-idea" version "0.21" //allow idea to find querydsl generated files
+    id "org.springframework.boot" version "2.1.5.RELEASE" //allow to use ./gradlew bootRun
+    id "com.github.ben-manes.versions" version "0.21.0" //allow to use ./gradlew dependencyUpdates
+}
+
+sourceCompatibility = JavaVersion.VERSION_12
+targetCompatibility = JavaVersion.VERSION_12
+version = appVersion
+jar { baseName = appName } //change to war if you want to create a war instead of a jar
+jacoco { toolVersion = "0.8.2" }
+
+//build
+mainClassName = "ragde.Application"
+
+//debug
+applicationDefaultJvmArgs = ["-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005"]
+
+//pass gradle properties to spring
+//for example running ./gradlew bootRun -Dspring.profiles.active=profile
+//pass spring.profiles.active=profile property to spring
+bootRun.systemProperties = System.properties
+
+//compile and notify spring devtools when code change
+idea {
+    module {
+        inheritOutputDirs = false
+        outputDir = file("$buildDir/classes/java/main/") //move compiled changes where spring devtools can watch them
+        testOutputDir = file("$buildDir/classes/test/") //not create extra folder like out or classes
+    }
+}
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    //recompile on changes, IDEA must enable Build project automatically or Run Build Project for manual
+    implementation("org.springframework.boot:spring-boot-devtools:${springBootVersion}")
+
+    //for rest
+    implementation("org.springframework.boot:spring-boot-starter-web:${springBootVersion}")
+
+    //for GraphQL SPQR
+    implementation("io.leangen.graphql:graphql-spqr-spring-boot-starter:0.0.4")
+
+    //for security
+    implementation("org.springframework.boot:spring-boot-starter-security:${springBootVersion}")
+    implementation("io.jsonwebtoken:jjwt:0.9.1") //json web token
+    implementation("commons-codec:commons-codec:1.12") //hash
+
+    //OAuth
+    implementation("org.springframework.social:spring-social-facebook:2.0.3.RELEASE")
+    implementation("com.github.spring-social:spring-social-google:1.1.3")
+
+    //WebSocket
+    implementation("org.springframework.boot:spring-boot-starter-websocket:${springBootVersion}")
+
+    //for setter and getter annotations
+    implementation("org.projectlombok:lombok:1.18.8")
+    annotationProcessor("org.projectlombok:lombok:1.18.8")
+
+    //for swagger REST documentation
+    implementation("io.springfox:springfox-swagger2:2.9.2")
+    implementation("io.springfox:springfox-bean-validators:2.9.2") //swagger use javax.validation in doc
+    implementation("io.springfox:springfox-swagger-ui:2.9.2") //create swagger-ui.html page
+
+    //querydsl
+    implementation("com.querydsl:querydsl-jpa:4.2.1") //allow querydsl with JPA (MySQL)
+    implementation("com.querydsl:querydsl-mongodb:4.2.1") //allow querydsl with mongodb
+    implementation("com.querydsl:querydsl-apt:4.2.1:jpa") //generate querydsl Objects
+    annotationProcessor(
+            "com.querydsl:querydsl-apt:4.2.1:jpa",
+            "org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.2.Final",
+            "javax.annotation:javax.annotation-api:1.3.2"
+    )
+
+    //jpa
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}")
+    implementation("com.h2database:h2:1.4.197")
+    implementation("mysql:mysql-connector-java:8.0.16")
+    implementation("org.mongodb:mongo-java-driver:3.10.1")
+
+    //mongodb
+    implementation("org.springframework.boot:spring-boot-starter-data-mongodb:${springBootVersion}")
+
+    //providedRuntime is needed where you want to compile a war
+    //providedRuntime("org.springframework.boot:spring-boot-starter-tomcat:${springBootVersion}")
+
+    //test
+    testImplementation("org.springframework.boot:spring-boot-starter-test:${springBootVersion}")
+}
+
+//update version at application.properties
+def updateApplicationProperties() {
+    def configFile = new File("src/main/resources/application.properties")
+    println "updating version to '${version}' in ${configFile}"
+    String configContent = configFile.getText("UTF-8")
+    configContent = configContent.replaceAll(/api-version=.*/, "api-version=${version}")
+    configFile.write(configContent, "UTF-8")
+}
+
+allprojects {
+    updateApplicationProperties()
+    tasks.withType(JavaCompile) {
+        options.compilerArgs << "-Xlint:deprecation,unchecked" //check deprecated and unchecked code
+    }
+}

@@ -1,0 +1,13 @@
+query all {
+    authProviders {
+        id
+        createdAt
+        updatedAt
+        name
+        description
+        authentications {
+            id
+            username
+        }
+    }
+}

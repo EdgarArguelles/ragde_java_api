@@ -1,0 +1,104 @@
+fragment allPersonData on Person {
+    id
+    createdAt
+    updatedAt
+    fullName
+    name
+    lastName
+    birthday
+    civilStatus
+    sex
+    email
+    roles {
+        id
+        name
+    }
+    authentications {
+        id
+        username
+    }
+}
+
+query page {
+    personPage(
+        pageDataRequest: {
+            page: 0
+            size: 3
+            sort: ["name", "id"]
+            direction: DESC
+            filters: [
+                { field: "name", operation: NE, value: "name 3" }
+                { field: "id", operation: GET, value: "2" }
+            ]
+        }
+    ) {
+        totalElements
+        totalPages
+        content {
+            id
+            fullName
+        }
+    }
+}
+
+query all {
+    people {
+        id
+        fullName
+        roles {
+            name
+        }
+        authentications {
+            username
+        }
+    }
+}
+
+query byID {
+    person(id: 2) {
+        ...allPersonData
+    }
+}
+
+mutation create {
+    createPerson(
+        person: {
+            name: "Edgar"
+            lastName: "Arguelles"
+            birthday: "2050-08-28"
+            civilStatus: 1
+            sex: "M"
+            email: "aaaa@aaa.com"
+            roles: [{ id: "1" }, { id: "2" }]
+            authentications: [{ id: "55" }]
+            createdAt: "1999-01-30T00:00:00"
+        }
+    ) {
+        ...allPersonData
+    }
+}
+
+mutation update {
+    updatePerson(
+        person: {
+            id: "2"
+            name: "Edgar"
+            lastName: "Arguelles"
+            birthday: "2050-08-28"
+            civilStatus: 1
+            sex: "M"
+            email: "aaaa@aaa.com"
+            roles: [{ id: "1" }, { id: "2" }]
+            authentications: [{ id: "55" }]
+            createdAt: "1999-01-30T00:00:00"
+        }
+    ) {
+        ...allPersonData
+    }
+}
+
+mutation delete {
+    deletePerson(id: 4) {
+        ...allPersonData
+    }
+}

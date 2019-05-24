@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>RAGDE</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+</head>
+<body>
+<h1>RAGDE Java API</h1>
+<h3>This project is a Java REST / GraphQL API used by RAGDE</h3>
+
+<a href="swagger-ui.html">API endpoints</a><br><br>
+<a href="gui">GraphQL GUI</a><br><br>
+<a href="info/version">version</a><br><br>
+
+<div class="w3-container w3-green w3-center">
+    <h3>Connect to OAuth</h3>
+</div>
+<div class="w3-row-padding w3-light-grey w3-center">
+    <div class="w3-half w3-padding-16">
+        <a id="link-facebook" target="_blank">Connect to Facebook</a>
+        <div id="oauth-facebook"></div>
+    </div>
+
+    <div class="w3-half w3-padding-16">
+        <a id="link-google" target="_blank">Connect to Google</a>
+        <div id="oauth-google"></div>
+    </div>
+</div>
+<a href="privacypolicy.html">Privacy Policy</a>
+
+<script>
+  const randomFacebookState = Math.random().toString(36).substring(2);
+  const randomGoogleState = Math.random().toString(36).substring(2);
+  document.getElementById('link-facebook').href = `oauth/facebook/signin?state=${randomFacebookState}`;
+  document.getElementById('link-google').href = `oauth/google/signin?state=${randomGoogleState}`;
+
+  const socket = new SockJS('oauth/websocket');
+  const stompClient = Stomp.over(socket);
+  stompClient.connect({}, function () {
+    stompClient.subscribe(`/oauth/response/${randomFacebookState}`, function (response) {
+      let content = `HI ${JSON.parse(response.body).loggedUser.fullName}<br>`;
+      content += `<img src="${JSON.parse(response.body).loggedUser.image}" class="w3-circle"/>`;
+      document.getElementById('oauth-facebook').innerHTML = content;
+    });
+
+    stompClient.subscribe(`/oauth/response/${randomGoogleState}`, function (response) {
+      let content = `HI ${JSON.parse(response.body).loggedUser.fullName}<br>`;
+      content += `<img src="${JSON.parse(response.body).loggedUser.image}" class="w3-circle"/>`;
+      document.getElementById('oauth-google').innerHTML = content;
+    });
+  });
+</script>
+</body>
+</html>
