@@ -1,11 +1,11 @@
 /**
- * update gradle with the command: ./gradlew wrapper --gradle-version=5.4.1 --distribution-type=all
+ * update gradle with the command: ./gradlew wrapper --gradle-version=5.5.1 --distribution-type=all
  **/
 buildscript {
     ext {
         appVersion = "0.9.0"
         appName = "ragde_java_api"
-        springBootVersion = "2.1.5.RELEASE"
+        springBootVersion = "2.1.7.RELEASE"
     }
     repositories {
         jcenter()
@@ -23,8 +23,8 @@ plugins {
     id "application" //for sourceCompatibility
     id "jacoco" //junit code coverage
     id "net.ltgt.apt-idea" version "0.21" //allow idea to find querydsl generated files
-    id "org.springframework.boot" version "2.1.5.RELEASE" //allow to use ./gradlew bootRun
-    id "com.github.ben-manes.versions" version "0.21.0" //allow to use ./gradlew dependencyUpdates
+    id "org.springframework.boot" version "2.1.7.RELEASE" //allow to use ./gradlew bootRun
+    id "com.github.ben-manes.versions" version "0.22.0" //allow to use ./gradlew dependencyUpdates
 }
 
 sourceCompatibility = JavaVersion.VERSION_12
@@ -70,7 +70,7 @@ dependencies {
     //for security
     implementation("org.springframework.boot:spring-boot-starter-security:${springBootVersion}")
     implementation("io.jsonwebtoken:jjwt:0.9.1") //json web token
-    implementation("commons-codec:commons-codec:1.12") //hash
+    implementation("commons-codec:commons-codec:1.13") //hash
 
     //OAuth
     implementation("org.springframework.social:spring-social-facebook:2.0.3.RELEASE")
@@ -101,7 +101,7 @@ dependencies {
     //jpa
     implementation("org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}")
     implementation("com.h2database:h2:1.4.197")
-    implementation("mysql:mysql-connector-java:8.0.16")
+    implementation("mysql:mysql-connector-java:8.0.17")
     implementation("org.mongodb:mongo-java-driver:3.10.1")
 
     //mongodb
