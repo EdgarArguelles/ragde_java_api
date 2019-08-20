@@ -43,13 +43,13 @@
   stompClient.connect({}, function () {
     stompClient.subscribe(`/oauth/response/${randomFacebookState}`, function (response) {
       let content = `HI ${JSON.parse(response.body).loggedUser.fullName}<br>`;
-      content += `<img src="${JSON.parse(response.body).loggedUser.image}" class="w3-circle"/>`;
+      content += `<img src="${JSON.parse(response.body).loggedUser.image}" class="w3-circle" width="100"/>`;
       document.getElementById('oauth-facebook').innerHTML = content;
     });
 
     stompClient.subscribe(`/oauth/response/${randomGoogleState}`, function (response) {
       let content = `HI ${JSON.parse(response.body).loggedUser.fullName}<br>`;
-      content += `<img src="${JSON.parse(response.body).loggedUser.image}" class="w3-circle"/>`;
+      content += `<img src="${JSON.parse(response.body).loggedUser.image}" class="w3-circle" width="100"/>`;
       document.getElementById('oauth-google').innerHTML = content;
     });
   });
