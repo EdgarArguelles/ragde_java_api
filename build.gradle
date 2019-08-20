@@ -1,5 +1,5 @@
 /**
- * update gradle with the command: ./gradlew wrapper --gradle-version=5.5.1 --distribution-type=all
+ * update gradle with the command: ./gradlew wrapper --gradle-version=5.6 --distribution-type=all
  **/
 buildscript {
     ext {
@@ -102,7 +102,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}")
     implementation("com.h2database:h2:1.4.197")
     implementation("mysql:mysql-connector-java:8.0.17")
-    implementation("org.mongodb:mongo-java-driver:3.10.1")
+    implementation("org.mongodb:mongo-java-driver:3.11.0")
 
     //mongodb
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb:${springBootVersion}")
