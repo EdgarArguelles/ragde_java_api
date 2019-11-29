@@ -35,7 +35,7 @@ public class PageFactoryImplTest {
         final Integer SIZE = 5;
         final List<String> SORT = null;
         final PageDataRequest pageDataRequest = new PageDataRequest(PAGE, SIZE, PageDataRequest.SORT_DIRECTION.DESC, SORT, null);
-        final PageRequest pageRequestExpected = PageRequest.of(PAGE, SIZE, new Sort(Sort.Direction.ASC, "id"));
+        final PageRequest pageRequestExpected = PageRequest.of(PAGE, SIZE, Sort.by(Sort.Direction.ASC, "id"));
 
         final PageRequest pageRequestResult = pageFactory.pageRequest(pageDataRequest);
 
@@ -52,7 +52,7 @@ public class PageFactoryImplTest {
         final Integer SIZE = 5;
         final List<String> SORT = Collections.emptyList();
         final PageDataRequest pageDataRequest = new PageDataRequest(PAGE, SIZE, PageDataRequest.SORT_DIRECTION.DESC, SORT, null);
-        final PageRequest pageRequestExpected = PageRequest.of(PAGE, SIZE, new Sort(Sort.Direction.ASC, "id"));
+        final PageRequest pageRequestExpected = PageRequest.of(PAGE, SIZE, Sort.by(Sort.Direction.ASC, "id"));
 
         final PageRequest pageRequestResult = pageFactory.pageRequest(pageDataRequest);
 
@@ -69,7 +69,7 @@ public class PageFactoryImplTest {
         final Integer SIZE = 5;
         final List<String> SORT = List.of("sort1", "sort2");
         final PageDataRequest pageDataRequest = new PageDataRequest(PAGE, SIZE, PageDataRequest.SORT_DIRECTION.DESC, SORT, null);
-        final PageRequest pageRequestExpected = PageRequest.of(PAGE, SIZE, new Sort(Sort.Direction.DESC, SORT));
+        final PageRequest pageRequestExpected = PageRequest.of(PAGE, SIZE, Sort.by(Sort.Direction.DESC, SORT.toArray(new String[0])));
 
         final PageRequest pageRequestResult = pageFactory.pageRequest(pageDataRequest);
 
@@ -114,23 +114,25 @@ public class PageFactoryImplTest {
     }
 
     /**
-     * Should return null when filtersRequest is null
+     * Should get default Predicate when filtersRequest is null
      */
     @Test
     public void getPredicateNullWhenFiltersNull() {
-        final Predicate predicate = pageFactory.getPredicate(null, null);
+        final String predicateExpected = "true = true";
+        final Predicate predicate = pageFactory.getPredicate(null, QPerson.person);
 
-        assertNull(predicate);
+        assertEquals(predicateExpected, predicate.toString());
     }
 
     /**
-     * Should return null when filtersRequest is empty
+     * Should get default Predicate when filtersRequest is empty
      */
     @Test
     public void getPredicateNullWhenFiltersEmpty() {
-        final Predicate predicate = pageFactory.getPredicate(Collections.emptyList(), null);
+        final String predicateExpected = "true = true";
+        final Predicate predicate = pageFactory.getPredicate(Collections.emptyList(), QPerson.person);
 
-        assertNull(predicate);
+        assertEquals(predicateExpected, predicate.toString());
     }
 
     /**
@@ -138,6 +140,7 @@ public class PageFactoryImplTest {
      */
     @Test
     public void getPredicate() {
+        final String predicateExpected = "person.name = value1 && person.createdAt = 2002-04-20T12:30:52 && person.birthday != 2010-11-23";
         final List<FilterRequest> filtersRequest = List.of(
                 new FilterRequest("name", "value1", FilterRequest.OPERATIONS.EQ),
                 new FilterRequest("createdAt", "2002-04-20T12:30:52Z", FilterRequest.OPERATIONS.EQ),
@@ -146,6 +149,6 @@ public class PageFactoryImplTest {
 
         final Predicate predicate = pageFactory.getPredicate(filtersRequest, QPerson.person);
 
-        assertNotNull(predicate);
+        assertEquals(predicateExpected, predicate.toString());
     }
 }
