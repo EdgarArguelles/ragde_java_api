@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Component
 @SuppressWarnings("unchecked")
@@ -29,11 +30,11 @@ public class PageFactoryImpl implements PageFactory {
 
     @Override
     public PageRequest pageRequest(PageDataRequest pageDataRequest) {
-        Sort sort = new Sort(Sort.Direction.ASC, "id");
+        Sort sort = Sort.by(Sort.Direction.ASC, "id");
 
         if (pageDataRequest.getSort() != null && !pageDataRequest.getSort().isEmpty()) {
             Sort.Direction direction = pageDataRequest.getDirection() != null ? getDirection(pageDataRequest.getDirection()) : null;
-            sort = new Sort(direction, pageDataRequest.getSort());
+            sort = Sort.by(Objects.requireNonNull(direction), pageDataRequest.getSort().toArray(new String[0]));
         }
 
         return PageRequest.of(pageDataRequest.getPage(), pageDataRequest.getSize(), sort);
@@ -91,11 +92,11 @@ public class PageFactoryImpl implements PageFactory {
         LocalDate dateValue = null;
         try {
             dateTimeValue = LocalDateTime.parse(stringValue, DateTimeFormatter.ofPattern(DATE_TIME_PATTERN));
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         try {
             dateValue = LocalDate.parse(stringValue, DateTimeFormatter.ofPattern(DATE_PATTERN));
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
 
         Object value = dateTimeValue != null ? dateTimeValue
