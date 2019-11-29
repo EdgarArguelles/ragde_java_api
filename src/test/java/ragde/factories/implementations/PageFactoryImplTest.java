@@ -118,7 +118,7 @@ public class PageFactoryImplTest {
      */
     @Test
     public void getPredicateNullWhenFiltersNull() {
-        final String predicateExpected = "person.id != -1";
+        final String predicateExpected = "true = true";
         final Predicate predicate = pageFactory.getPredicate(null, QPerson.person);
 
         assertEquals(predicateExpected, predicate.toString());
@@ -129,7 +129,7 @@ public class PageFactoryImplTest {
      */
     @Test
     public void getPredicateNullWhenFiltersEmpty() {
-        final String predicateExpected = "person.id != -1";
+        final String predicateExpected = "true = true";
         final Predicate predicate = pageFactory.getPredicate(Collections.emptyList(), QPerson.person);
 
         assertEquals(predicateExpected, predicate.toString());

@@ -63,8 +63,9 @@ public class PageFactoryImpl implements PageFactory {
 
     @Override
     public Predicate getPredicate(List<FilterRequest> filtersRequest, EntityPathBase entityPathBase) {
+        final BooleanExpression DEFAULT_EXPRESSION = Expressions.asBoolean(true).isTrue();
         if (filtersRequest == null) {
-            return null;
+            return DEFAULT_EXPRESSION;
         }
 
         BooleanExpression expression = null;
@@ -75,7 +76,7 @@ public class PageFactoryImpl implements PageFactory {
                 expression = expression.and(getBooleanExpression(fr, entityPathBase));
             }
         }
-        return expression;
+        return expression == null ? DEFAULT_EXPRESSION : expression;
     }
 
     /**
