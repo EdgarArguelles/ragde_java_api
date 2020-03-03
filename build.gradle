@@ -1,11 +1,11 @@
 /**
- * update gradle with the command: ./gradlew wrapper --gradle-version=6.0.1 --distribution-type=all
+ * update gradle with the command: ./gradlew wrapper --gradle-version=6.2.1 --distribution-type=all
  **/
 buildscript {
     ext {
         appVersion = "0.9.1"
         appName = "ragde_java_api"
-        springBootVersion = "2.2.1.RELEASE"
+        springBootVersion = "2.2.5.RELEASE"
     }
     repositories {
         jcenter()
@@ -23,8 +23,8 @@ plugins {
     id "application" //for sourceCompatibility
     id "jacoco" //junit code coverage
     id "net.ltgt.apt-idea" version "0.21" //allow idea to find querydsl generated files
-    id "org.springframework.boot" version "2.2.1.RELEASE" //allow to use ./gradlew bootRun
-    id "com.github.ben-manes.versions" version "0.27.0" //allow to use ./gradlew dependencyUpdates
+    id "org.springframework.boot" version "2.2.5.RELEASE" //allow to use ./gradlew bootRun
+    id "com.github.ben-manes.versions" version "0.28.0" //allow to use ./gradlew dependencyUpdates
 }
 
 sourceCompatibility = JavaVersion.VERSION_13
@@ -73,7 +73,7 @@ dependencies {
     //for security
     implementation("org.springframework.boot:spring-boot-starter-security:${springBootVersion}")
     implementation("io.jsonwebtoken:jjwt:0.9.1") //json web token
-    implementation("commons-codec:commons-codec:1.13") //hash
+    implementation("commons-codec:commons-codec:1.14") //hash
 
     //OAuth
     implementation("org.springframework.social:spring-social-facebook:2.0.3.RELEASE")
@@ -83,8 +83,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-websocket:${springBootVersion}")
 
     //for setter and getter annotations
-    implementation("org.projectlombok:lombok:1.18.10")
-    annotationProcessor("org.projectlombok:lombok:1.18.10")
+    implementation("org.projectlombok:lombok:1.18.12")
+    annotationProcessor("org.projectlombok:lombok:1.18.12")
 
     //for swagger REST documentation
     implementation("io.springfox:springfox-swagger2:2.9.2")
@@ -104,8 +104,8 @@ dependencies {
     //jpa
     implementation("org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}")
     implementation("com.h2database:h2:1.4.200")
-    implementation("mysql:mysql-connector-java:8.0.18")
-    implementation("org.mongodb:mongo-java-driver:3.11.2")
+    implementation("mysql:mysql-connector-java:8.0.19")
+    implementation("org.mongodb:mongo-java-driver:3.12.1")
 
     //mongodb
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb:${springBootVersion}")
