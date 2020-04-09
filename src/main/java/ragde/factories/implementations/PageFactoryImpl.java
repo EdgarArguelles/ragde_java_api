@@ -104,51 +104,49 @@ public class PageFactoryImpl implements PageFactory {
                 : dateValue != null ? dateValue
                 : stringValue;
 
-        switch (filterRequest.getOperation()) {
-            case EQ:
-                return cb.equal(root.get(filterRequest.getField()), value);
-            case NE:
-                return cb.notEqual(root.get(filterRequest.getField()), value);
-            case GT:
+        return switch (filterRequest.getOperation()) {
+            case EQ -> cb.equal(root.get(filterRequest.getField()), value);
+            case NE -> cb.notEqual(root.get(filterRequest.getField()), value);
+            case GT -> {
                 if (dateTimeValue != null) {
-                    return cb.greaterThan(root.get(filterRequest.getField()), dateTimeValue);
+                    yield cb.greaterThan(root.get(filterRequest.getField()), dateTimeValue);
                 }
                 if (dateValue != null) {
-                    return cb.greaterThan(root.get(filterRequest.getField()), dateValue);
+                    yield cb.greaterThan(root.get(filterRequest.getField()), dateValue);
                 }
-                return cb.greaterThan(root.get(filterRequest.getField()), stringValue);
-            case GET:
+                yield cb.greaterThan(root.get(filterRequest.getField()), stringValue);
+            }
+            case GET -> {
                 if (dateTimeValue != null) {
-                    return cb.greaterThanOrEqualTo(root.get(filterRequest.getField()), dateTimeValue);
+                    yield cb.greaterThanOrEqualTo(root.get(filterRequest.getField()), dateTimeValue);
                 }
                 if (dateValue != null) {
-                    return cb.greaterThanOrEqualTo(root.get(filterRequest.getField()), dateValue);
+                    yield cb.greaterThanOrEqualTo(root.get(filterRequest.getField()), dateValue);
                 }
-                return cb.greaterThanOrEqualTo(root.get(filterRequest.getField()), stringValue);
-            case LT:
+                yield cb.greaterThanOrEqualTo(root.get(filterRequest.getField()), stringValue);
+            }
+            case LT -> {
                 if (dateTimeValue != null) {
-                    return cb.lessThan(root.get(filterRequest.getField()), dateTimeValue);
+                    yield cb.lessThan(root.get(filterRequest.getField()), dateTimeValue);
                 }
                 if (dateValue != null) {
-                    return cb.lessThan(root.get(filterRequest.getField()), dateValue);
+                    yield cb.lessThan(root.get(filterRequest.getField()), dateValue);
                 }
-                return cb.lessThan(root.get(filterRequest.getField()), stringValue);
-            case LET:
+                yield cb.lessThan(root.get(filterRequest.getField()), stringValue);
+            }
+            case LET -> {
                 if (dateTimeValue != null) {
-                    return cb.lessThanOrEqualTo(root.get(filterRequest.getField()), dateTimeValue);
+                    yield cb.lessThanOrEqualTo(root.get(filterRequest.getField()), dateTimeValue);
                 }
                 if (dateValue != null) {
-                    return cb.lessThanOrEqualTo(root.get(filterRequest.getField()), dateValue);
+                    yield cb.lessThanOrEqualTo(root.get(filterRequest.getField()), dateValue);
                 }
-                return cb.lessThanOrEqualTo(root.get(filterRequest.getField()), stringValue);
-            case STARTS_WITH:
-                return cb.like(root.get(filterRequest.getField()), stringValue + "%");
-            case ENDS_WITH:
-                return cb.like(root.get(filterRequest.getField()), "%" + stringValue);
-            case LIKE:
-            default:
-                return cb.like(root.get(filterRequest.getField()), "%" + stringValue + "%");
-        }
+                yield cb.lessThanOrEqualTo(root.get(filterRequest.getField()), stringValue);
+            }
+            case STARTS_WITH -> cb.like(root.get(filterRequest.getField()), stringValue + "%");
+            case ENDS_WITH -> cb.like(root.get(filterRequest.getField()), "%" + stringValue);
+            default -> cb.like(root.get(filterRequest.getField()), "%" + stringValue + "%");
+        };
     }
 
     /**
@@ -186,27 +184,17 @@ public class PageFactoryImpl implements PageFactory {
      */
     private BooleanExpression getStringExpression(FilterRequest filterRequest, PathBuilder entityPath) {
         StringPath expression = entityPath.getString(filterRequest.getField());
-        switch (filterRequest.getOperation()) {
-            case EQ:
-                return expression.eq(filterRequest.getValue());
-            case NE:
-                return expression.ne(filterRequest.getValue());
-            case GT:
-                return expression.gt(filterRequest.getValue());
-            case GET:
-                return expression.goe(filterRequest.getValue());
-            case LT:
-                return expression.lt(filterRequest.getValue());
-            case LET:
-                return expression.loe(filterRequest.getValue());
-            case STARTS_WITH:
-                return expression.like(filterRequest.getValue() + "%");
-            case ENDS_WITH:
-                return expression.like("%" + filterRequest.getValue());
-            case LIKE:
-            default:
-                return expression.like("%" + filterRequest.getValue() + "%");
-        }
+        return switch (filterRequest.getOperation()) {
+            case EQ -> expression.eq(filterRequest.getValue());
+            case NE -> expression.ne(filterRequest.getValue());
+            case GT -> expression.gt(filterRequest.getValue());
+            case GET -> expression.goe(filterRequest.getValue());
+            case LT -> expression.lt(filterRequest.getValue());
+            case LET -> expression.loe(filterRequest.getValue());
+            case STARTS_WITH -> expression.like(filterRequest.getValue() + "%");
+            case ENDS_WITH -> expression.like("%" + filterRequest.getValue());
+            default -> expression.like("%" + filterRequest.getValue() + "%");
+        };
     }
 
     /**
@@ -219,25 +207,15 @@ public class PageFactoryImpl implements PageFactory {
     private BooleanExpression getNumberExpression(FilterRequest filterRequest, PathBuilder entityPath) {
         NumberPath expression = entityPath.getNumber(filterRequest.getField(), Number.class);
         Number numberValue = Double.parseDouble(filterRequest.getValue());
-        switch (filterRequest.getOperation()) {
-            case EQ:
-                return expression.eq(numberValue);
-            case NE:
-                return expression.ne(numberValue);
-            case GT:
-                return expression.gt(numberValue);
-            case GET:
-                return expression.goe(numberValue);
-            case LT:
-                return expression.lt(numberValue);
-            case LET:
-                return expression.loe(numberValue);
-            case STARTS_WITH:
-            case ENDS_WITH:
-            case LIKE:
-            default:
-                throw new RagdeValidationException("Number type doesn't allow like operations.");
-        }
+        return switch (filterRequest.getOperation()) {
+            case EQ -> expression.eq(numberValue);
+            case NE -> expression.ne(numberValue);
+            case GT -> expression.gt(numberValue);
+            case GET -> expression.goe(numberValue);
+            case LT -> expression.lt(numberValue);
+            case LET -> expression.loe(numberValue);
+            default -> throw new RagdeValidationException("Number type doesn't allow like operations.");
+        };
     }
 
     /**
@@ -250,25 +228,15 @@ public class PageFactoryImpl implements PageFactory {
     private BooleanExpression getDateTimeExpression(FilterRequest filterRequest, PathBuilder entityPath) {
         DateTimePath expression = entityPath.getDateTime(filterRequest.getField(), LocalDateTime.class);
         LocalDateTime dateTimeValue = LocalDateTime.parse(filterRequest.getValue(), DateTimeFormatter.ofPattern(DATE_TIME_PATTERN));
-        switch (filterRequest.getOperation()) {
-            case EQ:
-                return expression.eq(dateTimeValue);
-            case NE:
-                return expression.ne(dateTimeValue);
-            case GT:
-                return expression.gt(dateTimeValue);
-            case GET:
-                return expression.goe(dateTimeValue);
-            case LT:
-                return expression.lt(dateTimeValue);
-            case LET:
-                return expression.loe(dateTimeValue);
-            case STARTS_WITH:
-            case ENDS_WITH:
-            case LIKE:
-            default:
-                throw new RagdeValidationException("DateTime type doesn't allow like operations.");
-        }
+        return switch (filterRequest.getOperation()) {
+            case EQ -> expression.eq(dateTimeValue);
+            case NE -> expression.ne(dateTimeValue);
+            case GT -> expression.gt(dateTimeValue);
+            case GET -> expression.goe(dateTimeValue);
+            case LT -> expression.lt(dateTimeValue);
+            case LET -> expression.loe(dateTimeValue);
+            default -> throw new RagdeValidationException("DateTime type doesn't allow like operations.");
+        };
     }
 
     /**
@@ -281,25 +249,15 @@ public class PageFactoryImpl implements PageFactory {
     private BooleanExpression getDateExpression(FilterRequest filterRequest, PathBuilder entityPath) {
         DatePath expression = entityPath.getDate(filterRequest.getField(), LocalDate.class);
         LocalDate dateValue = LocalDate.parse(filterRequest.getValue(), DateTimeFormatter.ofPattern(DATE_PATTERN));
-        switch (filterRequest.getOperation()) {
-            case EQ:
-                return expression.eq(dateValue);
-            case NE:
-                return expression.ne(dateValue);
-            case GT:
-                return expression.gt(dateValue);
-            case GET:
-                return expression.goe(dateValue);
-            case LT:
-                return expression.lt(dateValue);
-            case LET:
-                return expression.loe(dateValue);
-            case STARTS_WITH:
-            case ENDS_WITH:
-            case LIKE:
-            default:
-                throw new RagdeValidationException("Date type doesn't allow like operations.");
-        }
+        return switch (filterRequest.getOperation()) {
+            case EQ -> expression.eq(dateValue);
+            case NE -> expression.ne(dateValue);
+            case GT -> expression.gt(dateValue);
+            case GET -> expression.goe(dateValue);
+            case LT -> expression.lt(dateValue);
+            case LET -> expression.loe(dateValue);
+            default -> throw new RagdeValidationException("Date type doesn't allow like operations.");
+        };
     }
 
     /**
@@ -309,13 +267,9 @@ public class PageFactoryImpl implements PageFactory {
      * @return Sort Direction or null if value was invalid
      */
     private Sort.Direction getDirection(PageDataRequest.SORT_DIRECTION direction) {
-        switch (direction) {
-            case ASC:
-                return Sort.Direction.ASC;
-            case DESC:
-                return Sort.Direction.DESC;
-            default:
-                return null;
-        }
+        return switch (direction) {
+            case ASC -> Sort.Direction.ASC;
+            case DESC -> Sort.Direction.DESC;
+        };
     }
 }
