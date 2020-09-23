@@ -65,10 +65,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 // Set security rules
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/", "/index.html", "/autoclose.html", "/privacypolicy.html", "/h2-console/**", "/info/**", "/webjars/**", "/swagger-resources/**", "/v2/api-docs", "/swagger-ui*").permitAll()
+                .antMatchers(HttpMethod.GET, "/", "/index.html", "/autoclose.html", "/privacypolicy.html").permitAll()
+                .antMatchers(HttpMethod.GET, "/swagger-ui/**", "/v3/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/h2-console/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/oauth/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/info/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/gui").permitAll()
                 .antMatchers(HttpMethod.POST, "/graphql").permitAll()
-                .antMatchers(HttpMethod.GET, "/oauth/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
 

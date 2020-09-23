@@ -64,6 +64,9 @@ dependencies {
     //jaxb-api was removed in JDK 11
     implementation("javax.xml.bind:jaxb-api:2.3.1")
 
+    //validation-api was removed in JDK 15
+    implementation("javax.validation:validation-api:2.0.1.Final")
+
     //for rest
     implementation("org.springframework.boot:spring-boot-starter-web:${springBootVersion}")
 
@@ -87,9 +90,7 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:1.18.12")
 
     //for swagger REST documentation
-    implementation("io.springfox:springfox-swagger2:3.0.0")
-    implementation("io.springfox:springfox-bean-validators:3.0.0") //swagger use javax.validation in doc
-    implementation("io.springfox:springfox-swagger-ui:3.0.0") //create swagger-ui.html page
+    implementation("org.springdoc:springdoc-openapi-ui:1.4.7")
 
     //querydsl
     implementation("com.querydsl:querydsl-jpa:4.4.0") //allow querydsl with JPA (MySQL)

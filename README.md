@@ -53,4 +53,4 @@ Change all Repositories: extends MongoRepository instead of MySQLRepository, for
 - Generated report (build/docs/javadoc/index.html)
 
 # REST Documentation
-    http://localhost:8000/ragde/swagger-ui.html
+    http://localhost:8000/ragde/swagger-ui/index.html?configUrl=/ragde/v3/api-docs/swagger-config
