@@ -66,7 +66,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // Set security rules
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/", "/index.html", "/autoclose.html", "/privacypolicy.html").permitAll()
-                .antMatchers(HttpMethod.GET, "/swagger-ui/**", "/v3/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/swagger-ui.html", "/swagger-ui/**", "/v3/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/h2-console/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/oauth/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/info/**").permitAll()
