@@ -1,4 +1,4 @@
-FROM openjdk:14 as builder
+FROM openjdk:15 as builder
 
 WORKDIR /app
 
@@ -8,7 +8,7 @@ COPY gradle/wrapper/* ./gradle/wrapper/
 COPY src ./src/
 RUN ./gradlew build -x test
 
-FROM openjdk:14
+FROM openjdk:15
 
 # Run the web service on container startup.
 COPY --from=builder /app/build/libs/*.jar /app.jar

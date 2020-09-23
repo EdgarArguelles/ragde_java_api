@@ -1,11 +1,11 @@
 /**
- * update gradle with the command: ./gradlew wrapper --gradle-version=6.3 --distribution-type=all
+ * update gradle with the command: ./gradlew wrapper --gradle-version=6.6.1 --distribution-type=all
  **/
 buildscript {
     ext {
         appVersion = "0.9.2"
         appName = "ragde_java_api"
-        springBootVersion = "2.2.6.RELEASE"
+        springBootVersion = "2.3.4.RELEASE"
     }
     repositories {
         jcenter()
@@ -23,12 +23,12 @@ plugins {
     id "application" //for sourceCompatibility
     id "jacoco" //junit code coverage
     id "net.ltgt.apt-idea" version "0.21" //allow idea to find querydsl generated files
-    id "org.springframework.boot" version "2.2.6.RELEASE" //allow to use ./gradlew bootRun
-    id "com.github.ben-manes.versions" version "0.28.0" //allow to use ./gradlew dependencyUpdates
+    id "org.springframework.boot" version "2.3.4.RELEASE" //allow to use ./gradlew bootRun
+    id "com.github.ben-manes.versions" version "0.33.0" //allow to use ./gradlew dependencyUpdates
 }
 
-sourceCompatibility = JavaVersion.VERSION_14
-targetCompatibility = JavaVersion.VERSION_14
+sourceCompatibility = JavaVersion.VERSION_15
+targetCompatibility = JavaVersion.VERSION_15
 version = appVersion
 jar { archiveBaseName = appName } //change to war if you want to create a war instead of a jar
 jacoco { toolVersion = "0.8.5" }
@@ -73,7 +73,7 @@ dependencies {
     //for security
     implementation("org.springframework.boot:spring-boot-starter-security:${springBootVersion}")
     implementation("io.jsonwebtoken:jjwt:0.9.1") //json web token
-    implementation("commons-codec:commons-codec:1.14") //hash
+    implementation("commons-codec:commons-codec:1.15") //hash
 
     //OAuth
     implementation("org.springframework.social:spring-social-facebook:2.0.3.RELEASE")
@@ -87,16 +87,16 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:1.18.12")
 
     //for swagger REST documentation
-    implementation("io.springfox:springfox-swagger2:2.9.2")
-    implementation("io.springfox:springfox-bean-validators:2.9.2") //swagger use javax.validation in doc
-    implementation("io.springfox:springfox-swagger-ui:2.9.2") //create swagger-ui.html page
+    implementation("io.springfox:springfox-swagger2:3.0.0")
+    implementation("io.springfox:springfox-bean-validators:3.0.0") //swagger use javax.validation in doc
+    implementation("io.springfox:springfox-swagger-ui:3.0.0") //create swagger-ui.html page
 
     //querydsl
-    implementation("com.querydsl:querydsl-jpa:4.3.1") //allow querydsl with JPA (MySQL)
-    implementation("com.querydsl:querydsl-mongodb:4.3.1") //allow querydsl with mongodb
-    implementation("com.querydsl:querydsl-apt:4.3.1:jpa") //generate querydsl Objects
+    implementation("com.querydsl:querydsl-jpa:4.4.0") //allow querydsl with JPA (MySQL)
+    implementation("com.querydsl:querydsl-mongodb:4.4.0") //allow querydsl with mongodb
+    implementation("com.querydsl:querydsl-apt:4.4.0:jpa") //generate querydsl Objects
     annotationProcessor(
-            "com.querydsl:querydsl-apt:4.3.1:jpa",
+            "com.querydsl:querydsl-apt:4.4.0:jpa",
             "org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.2.Final",
             "javax.annotation:javax.annotation-api:1.3.2"
     )
@@ -104,8 +104,8 @@ dependencies {
     //jpa
     implementation("org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}")
     implementation("com.h2database:h2:1.4.200")
-    implementation("mysql:mysql-connector-java:8.0.19")
-    implementation("org.mongodb:mongo-java-driver:3.12.3")
+    implementation("mysql:mysql-connector-java:8.0.21")
+    implementation("org.mongodb:mongo-java-driver:3.12.7")
 
     //mongodb
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb:${springBootVersion}")
