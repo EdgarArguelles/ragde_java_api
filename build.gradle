@@ -31,7 +31,7 @@ sourceCompatibility = JavaVersion.VERSION_15
 targetCompatibility = JavaVersion.VERSION_15
 version = appVersion
 jar { archiveBaseName = appName } //change to war if you want to create a war instead of a jar
-jacoco { toolVersion = "0.8.5" }
+jacoco { toolVersion = "0.8.6" }
 
 //build
 mainClassName = "ragde.Application"
@@ -60,12 +60,6 @@ repositories {
 dependencies {
     //recompile on changes, IDEA must enable Build project automatically or Run Build Project for manual
     implementation("org.springframework.boot:spring-boot-devtools:${springBootVersion}")
-
-    //jaxb-api was removed in JDK 11
-    implementation("javax.xml.bind:jaxb-api:2.3.1")
-
-    //validation-api was removed in JDK 15
-    implementation("javax.validation:validation-api:2.0.1.Final")
 
     //for rest
     implementation("org.springframework.boot:spring-boot-starter-web:${springBootVersion}")
@@ -116,6 +110,7 @@ dependencies {
 
     //test
     testImplementation("org.springframework.boot:spring-boot-starter-test:${springBootVersion}")
+    testImplementation("org.hibernate:hibernate-validator:6.1.5.Final")
 }
 
 //update version at application.properties
@@ -129,7 +124,4 @@ def updateApplicationProperties() {
 
 allprojects {
     updateApplicationProperties()
-    tasks.withType(JavaCompile) {
-        options.compilerArgs << "-Xlint:deprecation,unchecked" //check deprecated and unchecked code
-    }
 }
