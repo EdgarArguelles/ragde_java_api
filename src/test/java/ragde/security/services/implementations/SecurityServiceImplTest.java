@@ -2,14 +2,14 @@ package ragde.security.services.implementations;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ragde.exceptions.RagdeDontFoundException;
 import ragde.exceptions.RagdeValidationException;
 import ragde.models.Authentication;
@@ -28,12 +28,12 @@ import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class SecurityServiceImplTest {
 
@@ -55,27 +55,27 @@ public class SecurityServiceImplTest {
     /**
      * Should throw RagdeDontFoundException when authentication null
      */
-    @Test(expected = RagdeDontFoundException.class)
-    public void authenticateAuthenticationNull() throws IOException {
+    @Test
+    public void authenticateAuthenticationNull() {
         final String USERNAME = "user";
         final AccountCredentials credentials = new AccountCredentials(USERNAME, null);
         given(authenticationRepository.findByUsername(USERNAME)).willReturn(null);
 
-        securityService.authenticate(credentials);
+        assertThrows(RagdeDontFoundException.class, () -> securityService.authenticate(credentials));
     }
 
     /**
      * Should throw RagdeDontFoundException when password incorrect
      */
-    @Test(expected = RagdeDontFoundException.class)
-    public void authenticatePasswordIncorrect() throws IOException {
+    @Test
+    public void authenticatePasswordIncorrect() {
         final String USERNAME = "user";
         final String PASSWORD = "pass";
         final AccountCredentials credentials = new AccountCredentials(USERNAME, PASSWORD);
         final Authentication authentication = new Authentication(USERNAME, PASSWORD, null, null);
         given(authenticationRepository.findByUsername(USERNAME)).willReturn(authentication);
 
-        securityService.authenticate(credentials);
+        assertThrows(RagdeDontFoundException.class, () -> securityService.authenticate(credentials));
     }
 
     /**
@@ -114,12 +114,12 @@ public class SecurityServiceImplTest {
     /**
      * Should throw RagdeValidationException when not context
      */
-    @Test(expected = RagdeValidationException.class)
-    public void changeRoleNotContext() throws IOException {
+    @Test
+    public void changeRoleNotContext() {
         SecurityContextHolder.getContext().setAuthentication(null);
         final String ROLE_ID = "R1";
 
-        securityService.changeRole(ROLE_ID);
+        assertThrows(RagdeValidationException.class, () -> securityService.changeRole(ROLE_ID));
     }
 
     /**

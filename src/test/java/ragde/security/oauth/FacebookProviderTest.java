@@ -1,8 +1,8 @@
 package ragde.security.oauth;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,15 +10,15 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.social.facebook.connect.FacebookConnectionFactory;
 import org.springframework.social.oauth2.GrantType;
 import org.springframework.social.oauth2.OAuth2Parameters;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.client.HttpClientErrorException;
 import ragde.models.AuthProvider;
 import ragde.repositories.AuthProviderRepository;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class FacebookProviderTest {
 
@@ -33,7 +33,7 @@ public class FacebookProviderTest {
     @MockBean
     private AuthProviderRepository authProviderRepository;
 
-    @Before
+    @BeforeEach
     public void setup() throws Exception {
         final AuthProvider authProvider = new AuthProvider("A1");
         authProvider.setAuthKey(authKeyExpected);
@@ -89,11 +89,11 @@ public class FacebookProviderTest {
     /**
      * Should throw HttpClientErrorException
      */
-    @Test(expected = HttpClientErrorException.class)
+    @Test
     public void getAccessGrant() {
         final String callback = "callback";
         final String authorizationCode = "code";
 
-        facebookProvider.getAccessGrant(callback, authorizationCode);
+        assertThrows(HttpClientErrorException.class, () -> facebookProvider.getAccessGrant(callback, authorizationCode));
     }
 }

@@ -1,7 +1,7 @@
 package ragde.security.services.implementations;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,7 +12,7 @@ import org.springframework.social.facebook.api.impl.FacebookTemplate;
 import org.springframework.social.google.api.impl.GoogleTemplate;
 import org.springframework.social.google.api.oauth2.OAuth2Operations;
 import org.springframework.social.google.api.oauth2.UserInfo;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ragde.models.AuthProvider;
 import ragde.models.Authentication;
 import ragde.models.Person;
@@ -25,15 +25,15 @@ import ragde.security.factories.LoggedUserFactory;
 import ragde.security.pojos.LoggedUser;
 import ragde.security.services.OAuthService;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class OAuthServiceImplTest {
 

@@ -1,13 +1,13 @@
 package ragde.exceptions;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import ragde.pojos.responses.error.nesteds.NestedError;
 
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 public class RagdeValidationExceptionTest {
 

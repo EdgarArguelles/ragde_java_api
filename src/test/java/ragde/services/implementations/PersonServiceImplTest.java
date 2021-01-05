@@ -1,8 +1,8 @@
 package ragde.services.implementations;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -11,7 +11,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ragde.exceptions.RagdeDontFoundException;
 import ragde.exceptions.RagdeValidationException;
 import ragde.models.Authentication;
@@ -28,11 +28,11 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class PersonServiceImplTest {
 
@@ -45,7 +45,7 @@ public class PersonServiceImplTest {
     @MockBean
     private AuthenticationRepository authenticationRepository;
 
-    @Before
+    @BeforeEach
     public void setup() {
         final LoggedUser user = new LoggedUser();
         user.setPermissions(Set.of("VIEW_USERS", "CREATE_USERS", "REMOVE_USERS"));
@@ -82,12 +82,12 @@ public class PersonServiceImplTest {
     /**
      * Should throw RagdeDontFoundException
      */
-    @Test(expected = RagdeDontFoundException.class)
+    @Test
     public void findByIdWhenDontFound() {
         final String ID = "ID";
         given(personRepository.findById(ID)).willReturn(Optional.empty());
 
-        personService.findById(ID);
+        assertThrows(RagdeDontFoundException.class, () -> personService.findById(ID));
     }
 
     /**
@@ -114,29 +114,29 @@ public class PersonServiceImplTest {
     /**
      * Should throw ConstraintViolationException when invalid
      */
-    @Test(expected = ConstraintViolationException.class)
+    @Test
     public void saveInvalid() {
-        personService.save(new Person());
+        assertThrows(ConstraintViolationException.class, () -> personService.save(new Person()));
     }
 
     /**
      * Should throw RagdeValidationException when Civil Status is invalid
      */
-    @Test(expected = RagdeValidationException.class)
+    @Test
     public void saveCivilStatusInvalid() {
         final Person person = new Person("name", "last", LocalDate.now(), -1, Person.SEX.M, null, null);
 
-        personService.save(person);
+        assertThrows(RagdeValidationException.class, () -> personService.save(person));
     }
 
     /**
      * Should throw RagdeValidationException when Sex is invalid
      */
-    @Test(expected = RagdeValidationException.class)
+    @Test
     public void saveSexInvalid() {
         final Person person = new Person("name", "last", LocalDate.now(), Person.CIVIL_STATUS.SINGLE, "A", null, null);
 
-        personService.save(person);
+        assertThrows(RagdeValidationException.class, () -> personService.save(person));
     }
 
     /**
@@ -167,35 +167,35 @@ public class PersonServiceImplTest {
     /**
      * Should throw ConstraintViolationException when invalid
      */
-    @Test(expected = ConstraintViolationException.class)
+    @Test
     public void updateInvalid() {
-        personService.update(new Person());
+        assertThrows(ConstraintViolationException.class, () -> personService.update(new Person()));
     }
 
     /**
      * Should throw RagdeValidationException when Civil Status is invalid
      */
-    @Test(expected = RagdeValidationException.class)
+    @Test
     public void updateCivilStatusInvalid() {
         final Person person = new Person("name", "last", LocalDate.now(), -1, Person.SEX.M, null, null);
 
-        personService.update(person);
+        assertThrows(RagdeValidationException.class, () -> personService.update(person));
     }
 
     /**
      * Should throw RagdeValidationException when Sex is invalid
      */
-    @Test(expected = RagdeValidationException.class)
+    @Test
     public void updateSexInvalid() {
         final Person person = new Person("name", "last", LocalDate.now(), Person.CIVIL_STATUS.SINGLE, "A", null, null);
 
-        personService.update(person);
+        assertThrows(RagdeValidationException.class, () -> personService.update(person));
     }
 
     /**
      * Should throw RagdeDontFoundException when person doesn't exist
      */
-    @Test(expected = RagdeDontFoundException.class)
+    @Test
     public void updateDontFound() {
         final String ID = "ID";
         final Person person = new Person("name", "last", LocalDate.now(), Person.CIVIL_STATUS.SINGLE, Person.SEX.M, null, null);
@@ -204,7 +204,7 @@ public class PersonServiceImplTest {
         person.setSex(Person.SEX.M);
         given(personRepository.findById(ID)).willReturn(Optional.empty());
 
-        personService.update(person);
+        assertThrows(RagdeDontFoundException.class, () -> personService.update(person));
     }
 
     /**
@@ -260,25 +260,25 @@ public class PersonServiceImplTest {
     /**
      * Should throw RagdeDontFoundException when person doesn't exist
      */
-    @Test(expected = RagdeDontFoundException.class)
+    @Test
     public void deleteDontFound() {
         final String ID = "ID";
         given(personRepository.findById(ID)).willReturn(Optional.empty());
 
-        personService.delete(ID);
+        assertThrows(RagdeDontFoundException.class, () -> personService.delete(ID));
     }
 
     /**
      * Should throw RagdeValidationException when person is being used
      */
-    @Test(expected = RagdeValidationException.class)
+    @Test
     public void deleteUsed() {
         final String ID = "ID";
         final Person person = new Person(ID);
         person.setAuthentications(List.of(new Authentication("A1")));
         given(personRepository.findById(ID)).willReturn(Optional.of(person));
 
-        personService.delete(ID);
+        assertThrows(RagdeValidationException.class, () -> personService.delete(ID));
     }
 
     /**
@@ -314,9 +314,9 @@ public class PersonServiceImplTest {
     /**
      * Should throw ConstraintViolationException when invalid
      */
-    @Test(expected = ConstraintViolationException.class)
+    @Test
     public void pageInvalid() {
-        personService.page(new PageDataRequest());
+        assertThrows(ConstraintViolationException.class, () -> personService.page(new PageDataRequest()));
     }
 
     /**

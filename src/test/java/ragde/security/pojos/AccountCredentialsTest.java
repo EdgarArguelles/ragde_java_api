@@ -1,6 +1,6 @@
 package ragde.security.pojos;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import ragde.integration_test.IntegrationTest;
 import ragde.pojos.responses.error.nesteds.NestedError;
 import ragde.pojos.responses.error.nesteds.ValidationNestedError;
@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class AccountCredentialsTest {
 

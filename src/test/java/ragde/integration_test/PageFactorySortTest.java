@@ -1,12 +1,12 @@
 package ragde.integration_test;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ragde.factories.PageFactory;
 import ragde.models.Person;
 import ragde.models.QPerson;
@@ -18,10 +18,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
 @SuppressWarnings("unchecked")
 public class PageFactorySortTest {
@@ -52,7 +52,7 @@ public class PageFactorySortTest {
 
     private LocalDate dateTime3;
 
-    @Before
+    @BeforeEach
     public void setup() {
         pageDataRequest = new PageDataRequest(0, 100, null, null, null);
         IntegrationTest.cleanAllData(authenticationRepository, authProviderRepository, personRepository, roleRepository, permissionRepository);

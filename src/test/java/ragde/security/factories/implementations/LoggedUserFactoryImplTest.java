@@ -1,10 +1,10 @@
 package ragde.security.factories.implementations;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ragde.exceptions.RagdeValidationException;
 import ragde.models.Permission;
 import ragde.models.Person;
@@ -15,10 +15,9 @@ import ragde.security.pojos.LoggedUser;
 import java.util.Collections;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
+import static org.junit.jupiter.api.Assertions.*;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class LoggedUserFactoryImplTest {
 
@@ -28,40 +27,40 @@ public class LoggedUserFactoryImplTest {
     /**
      * Should throw RagdeValidationException when person null
      */
-    @Test(expected = RagdeValidationException.class)
+    @Test
     public void loggedUserPersonNull() {
-        loggedUserFactory.loggedUser(null);
+        assertThrows(RagdeValidationException.class, () -> loggedUserFactory.loggedUser(null));
     }
 
     /**
      * Should throw RagdeValidationException when person's Roles is null
      */
-    @Test(expected = RagdeValidationException.class)
+    @Test
     public void loggedUserRolesNull() {
         final Person person = new Person("P1");
-        loggedUserFactory.loggedUser(person);
+        assertThrows(RagdeValidationException.class, () -> loggedUserFactory.loggedUser(person));
     }
 
     /**
      * Should throw RagdeValidationException when person's Roles is empty
      */
-    @Test(expected = RagdeValidationException.class)
+    @Test
     public void loggedUserRolesEmpty() {
         final Person person = new Person("P1");
         person.setRoles(Collections.emptySet());
-        loggedUserFactory.loggedUser(person);
+        assertThrows(RagdeValidationException.class, () -> loggedUserFactory.loggedUser(person));
     }
 
     /**
      * Should throw RagdeValidationException when requested role id doesn't belong to person
      */
-    @Test(expected = RagdeValidationException.class)
+    @Test
     public void loggedUserIncorrectRoleId() {
         final String ROLE_ID = "R0";
         final Person person = new Person("P1");
         person.setRoles(Set.of(new Role("R1"), new Role("R2"), new Role("R3")));
 
-        loggedUserFactory.loggedUser(person, ROLE_ID);
+        assertThrows(RagdeValidationException.class, () -> loggedUserFactory.loggedUser(person, ROLE_ID));
     }
 
     /**
