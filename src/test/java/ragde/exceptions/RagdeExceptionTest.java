@@ -1,6 +1,6 @@
 package ragde.exceptions;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import ragde.pojos.responses.error.ErrorResponse;
 import ragde.pojos.responses.error.nesteds.NestedError;
@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class RagdeExceptionTest {
 

@@ -1,8 +1,8 @@
 package ragde.services.implementations;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -11,7 +11,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ragde.exceptions.RagdeDontFoundException;
 import ragde.exceptions.RagdeValidationException;
 import ragde.models.Permission;
@@ -26,11 +26,11 @@ import javax.validation.ConstraintViolationException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class PermissionServiceImplTest {
 
@@ -43,7 +43,7 @@ public class PermissionServiceImplTest {
     @MockBean
     private RoleRepository roleRepository;
 
-    @Before
+    @BeforeEach
     public void setup() {
         final LoggedUser user = new LoggedUser();
         user.setPermissions(Set.of("VIEW_ROLES", "CREATE_ROLES", "REMOVE_ROLES"));
@@ -76,12 +76,12 @@ public class PermissionServiceImplTest {
     /**
      * Should throw RagdeDontFoundException
      */
-    @Test(expected = RagdeDontFoundException.class)
+    @Test
     public void findByIdWhenDontFound() {
         final String ID = "ID";
         given(permissionRepository.findById(ID)).willReturn(Optional.empty());
 
-        permissionService.findById(ID);
+        assertThrows(RagdeDontFoundException.class, () -> permissionService.findById(ID));
     }
 
     /**
@@ -125,21 +125,21 @@ public class PermissionServiceImplTest {
     /**
      * Should throw ConstraintViolationException when invalid
      */
-    @Test(expected = ConstraintViolationException.class)
+    @Test
     public void saveInvalid() {
-        permissionService.save(new Permission());
+        assertThrows(ConstraintViolationException.class, () -> permissionService.save(new Permission()));
     }
 
     /**
      * Should throw RagdeValidationException when name duplicated
      */
-    @Test(expected = RagdeValidationException.class)
+    @Test
     public void saveDuplicate() {
         final String NAME = "test";
         final Permission permission = new Permission(NAME, "123");
         given(permissionRepository.findByName(NAME)).willReturn(permission);
 
-        permissionService.save(permission);
+        assertThrows(RagdeValidationException.class, () -> permissionService.save(permission));
     }
 
     /**
@@ -167,22 +167,22 @@ public class PermissionServiceImplTest {
     /**
      * Should throw ConstraintViolationException when invalid
      */
-    @Test(expected = ConstraintViolationException.class)
+    @Test
     public void updateInvalid() {
-        permissionService.update(new Permission());
+        assertThrows(ConstraintViolationException.class, () -> permissionService.update(new Permission()));
     }
 
     /**
      * Should throw RagdeDontFoundException when permission doesn't exist
      */
-    @Test(expected = RagdeDontFoundException.class)
+    @Test
     public void updateDontFound() {
         final String ID = "ID";
         final Permission permission = new Permission("ABC", "123");
         permission.setId(ID);
         given(permissionRepository.findById(ID)).willReturn(Optional.empty());
 
-        permissionService.update(permission);
+        assertThrows(RagdeDontFoundException.class, () -> permissionService.update(permission));
     }
 
     /**
@@ -228,18 +228,18 @@ public class PermissionServiceImplTest {
     /**
      * Should throw RagdeDontFoundException when permission doesn't exist
      */
-    @Test(expected = RagdeDontFoundException.class)
+    @Test
     public void deleteDontFound() {
         final String ID = "ID";
         given(permissionRepository.findById(ID)).willReturn(Optional.empty());
 
-        permissionService.delete(ID);
+        assertThrows(RagdeDontFoundException.class, () -> permissionService.delete(ID));
     }
 
     /**
      * Should throw RagdeValidationException when permission is being used
      */
-    @Test(expected = RagdeValidationException.class)
+    @Test
     public void deleteUsed() {
         final String ID = "ID";
         final String NAME = "test";
@@ -249,7 +249,7 @@ public class PermissionServiceImplTest {
         permission.setRoles(List.of(new Role("ID1")));
         given(permissionRepository.findById(ID)).willReturn(Optional.of(permission));
 
-        permissionService.delete(ID);
+        assertThrows(RagdeValidationException.class, () -> permissionService.delete(ID));
     }
 
     /**
@@ -280,9 +280,9 @@ public class PermissionServiceImplTest {
     /**
      * Should throw ConstraintViolationException when invalid
      */
-    @Test(expected = ConstraintViolationException.class)
+    @Test
     public void pageInvalid() {
-        permissionService.page(new PageDataRequest());
+        assertThrows(ConstraintViolationException.class, () -> permissionService.page(new PageDataRequest()));
     }
 
     /**

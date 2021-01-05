@@ -1,13 +1,13 @@
 package ragde.models.converters;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.persistence.AttributeConverter;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class LocalDateAttributeConverterTest {
 

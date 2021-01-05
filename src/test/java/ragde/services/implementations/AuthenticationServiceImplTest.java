@@ -1,8 +1,8 @@
 package ragde.services.implementations;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -11,7 +11,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ragde.exceptions.RagdeDontFoundException;
 import ragde.exceptions.RagdeValidationException;
 import ragde.models.AuthProvider;
@@ -31,11 +31,11 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class AuthenticationServiceImplTest {
 
@@ -51,7 +51,7 @@ public class AuthenticationServiceImplTest {
     @MockBean
     private SecurityService securityService;
 
-    @Before
+    @BeforeEach
     public void setup() {
         final LoggedUser user = new LoggedUser();
         user.setPermissions(Set.of("VIEW_USERS", "CREATE_USERS", "REMOVE_USERS"));
@@ -82,12 +82,12 @@ public class AuthenticationServiceImplTest {
     /**
      * Should throw RagdeDontFoundException
      */
-    @Test(expected = RagdeDontFoundException.class)
+    @Test
     public void findByIdWhenDontFound() {
         final String ID = "ID";
         given(authenticationRepository.findById(ID)).willReturn(Optional.empty());
 
-        authenticationService.findById(ID);
+        assertThrows(RagdeDontFoundException.class, () -> authenticationService.findById(ID));
     }
 
     /**
@@ -151,37 +151,37 @@ public class AuthenticationServiceImplTest {
     /**
      * Should throw ConstraintViolationException when invalid
      */
-    @Test(expected = ConstraintViolationException.class)
+    @Test
     public void saveInvalid() {
-        authenticationService.save(new Authentication());
+        assertThrows(ConstraintViolationException.class, () -> authenticationService.save(new Authentication()));
     }
 
     /**
      * Should throw RagdeValidationException when password is null
      */
-    @Test(expected = RagdeValidationException.class)
+    @Test
     public void savePasswordNull() {
         final Authentication authentication = new Authentication("test", null, new AuthProvider("A1"), new Person("P1"));
 
-        authenticationService.save(authentication);
+        assertThrows(RagdeValidationException.class, () -> authenticationService.save(authentication));
     }
 
     /**
      * Should throw RagdeValidationException when username duplicated
      */
-    @Test(expected = RagdeValidationException.class)
+    @Test
     public void saveUsernameDuplicate() {
         final String USERNAME = "test";
         final Authentication authentication = new Authentication(USERNAME, "123", new AuthProvider(), new Person());
         given(authenticationRepository.findByUsername(USERNAME)).willReturn(authentication);
 
-        authenticationService.save(authentication);
+        assertThrows(RagdeValidationException.class, () -> authenticationService.save(authentication));
     }
 
     /**
      * Should throw RagdeValidationException when AuthProvider and person duplicated
      */
-    @Test(expected = RagdeValidationException.class)
+    @Test
     public void saveAuthProviderPersonDuplicate() {
         final String USERNAME = "test";
         final AuthProvider LOCALPROVIDER = new AuthProvider("L");
@@ -192,7 +192,7 @@ public class AuthenticationServiceImplTest {
         given(authProviderRepository.findByName("LOCAL")).willReturn(LOCALPROVIDER);
         given(authenticationRepository.findByAuthProviderAndPerson(LOCALPROVIDER, PERSON)).willReturn(authentication);
 
-        authenticationService.save(authentication);
+        assertThrows(RagdeValidationException.class, () -> authenticationService.save(authentication));
     }
 
     /**
@@ -230,31 +230,31 @@ public class AuthenticationServiceImplTest {
     /**
      * Should throw ConstraintViolationException when invalid
      */
-    @Test(expected = ConstraintViolationException.class)
+    @Test
     public void updateInvalid() {
-        authenticationService.update(new Authentication());
+        assertThrows(ConstraintViolationException.class, () -> authenticationService.update(new Authentication()));
     }
 
     /**
      * Should throw RagdeValidationException when password is null
      */
-    @Test(expected = RagdeValidationException.class)
+    @Test
     public void updatePasswordNull() {
         final Authentication authentication = new Authentication("test", null, new AuthProvider("A1"), new Person("P1"));
 
-        authenticationService.update(authentication);
+        assertThrows(RagdeValidationException.class, () -> authenticationService.update(authentication));
     }
 
     /**
      * Should throw RagdeDontFoundException when authentication doesn't exist
      */
-    @Test(expected = RagdeDontFoundException.class)
+    @Test
     public void updateDontFound() {
         final String ID = "ID";
         final Authentication authentication = new Authentication(ID, "123", new AuthProvider(), new Person());
         given(authenticationRepository.findById(ID)).willReturn(Optional.empty());
 
-        authenticationService.update(authentication);
+        assertThrows(RagdeDontFoundException.class, () -> authenticationService.update(authentication));
     }
 
     /**
@@ -301,12 +301,12 @@ public class AuthenticationServiceImplTest {
     /**
      * Should throw RagdeDontFoundException when authentication doesn't exist
      */
-    @Test(expected = RagdeDontFoundException.class)
+    @Test
     public void deleteDontFound() {
         final String ID = "ID";
         given(authenticationRepository.findById(ID)).willReturn(Optional.empty());
 
-        authenticationService.delete(ID);
+        assertThrows(RagdeDontFoundException.class, () -> authenticationService.delete(ID));
     }
 
     /**
@@ -339,9 +339,9 @@ public class AuthenticationServiceImplTest {
     /**
      * Should throw ConstraintViolationException when invalid
      */
-    @Test(expected = ConstraintViolationException.class)
+    @Test
     public void pageInvalid() {
-        authenticationService.page(new PageDataRequest());
+        assertThrows(ConstraintViolationException.class, () -> authenticationService.page(new PageDataRequest()));
     }
 
     /**

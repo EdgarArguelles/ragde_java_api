@@ -4,14 +4,14 @@ import graphql.GraphQLError;
 import graphql.execution.DataFetcherExceptionHandlerParameters;
 import graphql.execution.ExecutionContext;
 import graphql.execution.ExecutionPath;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ragde.exceptions.*;
 import ragde.pojos.responses.error.nesteds.NestedError;
 import ragde.pojos.responses.error.nesteds.ValidationNestedError;
@@ -22,11 +22,11 @@ import javax.validation.Path;
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.mockito.Mockito.*;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class GraphQLExceptionsHandlerTest {
 

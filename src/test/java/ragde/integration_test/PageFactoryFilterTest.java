@@ -1,13 +1,13 @@
 package ragde.integration_test;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.domain.Page;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ragde.exceptions.RagdeValidationException;
 import ragde.factories.PageFactory;
 import ragde.models.Person;
@@ -23,10 +23,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
+import static org.junit.jupiter.api.Assertions.*;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
 @SuppressWarnings("unchecked")
 public class PageFactoryFilterTest {
@@ -63,7 +62,7 @@ public class PageFactoryFilterTest {
 
     private LocalDate dateTime3;
 
-    @Before
+    @BeforeEach
     public void setup() {
         pageDataRequest = new PageDataRequest(0, 100, PageDataRequest.SORT_DIRECTION.ASC, List.of("lastName", "civilStatus"), new ArrayList<>());
         IntegrationTest.cleanAllData(authenticationRepository, authProviderRepository, personRepository, roleRepository, permissionRepository);
@@ -140,81 +139,81 @@ public class PageFactoryFilterTest {
     /**
      * Should throw InvalidDataAccessApiUsageException when field is invalid using Specifications
      */
-    @Test(expected = InvalidDataAccessApiUsageException.class)
+    @Test
     public void invalidFieldSpecifications() {
         pageDataRequest.getFilters().add(new FilterRequest("invalid", "5", FilterRequest.OPERATIONS.EQ));
 
-        personRepository.findAll(pageFactory.getSpecifications(pageDataRequest.getFilters()), pageFactory.pageRequest(pageDataRequest));
+        assertThrows(InvalidDataAccessApiUsageException.class, () -> personRepository.findAll(pageFactory.getSpecifications(pageDataRequest.getFilters()), pageFactory.pageRequest(pageDataRequest)));
     }
 
     /**
      * Should throw RagdeValidationException when field is invalid using Predicate
      */
-    @Test(expected = RagdeValidationException.class)
+    @Test
     public void invalidFieldPredicate() {
         pageDataRequest.getFilters().add(new FilterRequest("invalid", "5", FilterRequest.OPERATIONS.EQ));
 
-        personRepository.findAll(pageFactory.getPredicate(pageDataRequest.getFilters(), QPerson.person), pageFactory.pageRequest(pageDataRequest));
+        assertThrows(RagdeValidationException.class, () -> personRepository.findAll(pageFactory.getPredicate(pageDataRequest.getFilters(), QPerson.person), pageFactory.pageRequest(pageDataRequest)));
     }
 
     /**
      * Should throw InvalidDataAccessApiUsageException when Number is invalid using Specifications
      */
-    @Test(expected = InvalidDataAccessApiUsageException.class)
+    @Test
     public void invalidNumberSpecifications() {
         pageDataRequest.getFilters().add(new FilterRequest("civilStatus", "ABC", FilterRequest.OPERATIONS.EQ));
 
-        personRepository.findAll(pageFactory.getSpecifications(pageDataRequest.getFilters()), pageFactory.pageRequest(pageDataRequest));
+        assertThrows(InvalidDataAccessApiUsageException.class, () -> personRepository.findAll(pageFactory.getSpecifications(pageDataRequest.getFilters()), pageFactory.pageRequest(pageDataRequest)));
     }
 
     /**
      * Should throw RagdeValidationException when Number is invalid using Predicate
      */
-    @Test(expected = RagdeValidationException.class)
+    @Test
     public void invalidNumberPredicate() {
         pageDataRequest.getFilters().add(new FilterRequest("civilStatus", "ABC", FilterRequest.OPERATIONS.EQ));
 
-        personRepository.findAll(pageFactory.getPredicate(pageDataRequest.getFilters(), QPerson.person), pageFactory.pageRequest(pageDataRequest));
+        assertThrows(RagdeValidationException.class, () -> personRepository.findAll(pageFactory.getPredicate(pageDataRequest.getFilters(), QPerson.person), pageFactory.pageRequest(pageDataRequest)));
     }
 
     /**
      * Should throw InvalidDataAccessApiUsageException when LocalDate is invalid using Specifications
      */
-    @Test(expected = InvalidDataAccessApiUsageException.class)
+    @Test
     public void invalidLocalDateSpecifications() {
         pageDataRequest.getFilters().add(new FilterRequest("birthday", "ABC", FilterRequest.OPERATIONS.EQ));
 
-        personRepository.findAll(pageFactory.getSpecifications(pageDataRequest.getFilters()), pageFactory.pageRequest(pageDataRequest));
+        assertThrows(InvalidDataAccessApiUsageException.class, () -> personRepository.findAll(pageFactory.getSpecifications(pageDataRequest.getFilters()), pageFactory.pageRequest(pageDataRequest)));
     }
 
     /**
      * Should throw RagdeValidationException when LocalDate is invalid using Predicate
      */
-    @Test(expected = RagdeValidationException.class)
+    @Test
     public void invalidLocalDatePredicate() {
         pageDataRequest.getFilters().add(new FilterRequest("birthday", "ABC", FilterRequest.OPERATIONS.EQ));
 
-        personRepository.findAll(pageFactory.getPredicate(pageDataRequest.getFilters(), QPerson.person), pageFactory.pageRequest(pageDataRequest));
+        assertThrows(RagdeValidationException.class, () -> personRepository.findAll(pageFactory.getPredicate(pageDataRequest.getFilters(), QPerson.person), pageFactory.pageRequest(pageDataRequest)));
     }
 
     /**
      * Should throw InvalidDataAccessApiUsageException when LocalDateTime is invalid using Specifications
      */
-    @Test(expected = InvalidDataAccessApiUsageException.class)
+    @Test
     public void invalidLocalDateTimeSpecifications() {
         pageDataRequest.getFilters().add(new FilterRequest("createdAt", "ABC", FilterRequest.OPERATIONS.EQ));
 
-        personRepository.findAll(pageFactory.getSpecifications(pageDataRequest.getFilters()), pageFactory.pageRequest(pageDataRequest));
+        assertThrows(InvalidDataAccessApiUsageException.class, () -> personRepository.findAll(pageFactory.getSpecifications(pageDataRequest.getFilters()), pageFactory.pageRequest(pageDataRequest)));
     }
 
     /**
      * Should throw RagdeValidationException when LocalDateTime is invalid using Predicate
      */
-    @Test(expected = RagdeValidationException.class)
+    @Test
     public void invalidLocalDateTimePredicate() {
         pageDataRequest.getFilters().add(new FilterRequest("createdAt", "ABC", FilterRequest.OPERATIONS.EQ));
 
-        personRepository.findAll(pageFactory.getPredicate(pageDataRequest.getFilters(), QPerson.person), pageFactory.pageRequest(pageDataRequest));
+        assertThrows(RagdeValidationException.class, () -> personRepository.findAll(pageFactory.getPredicate(pageDataRequest.getFilters(), QPerson.person), pageFactory.pageRequest(pageDataRequest)));
     }
 
     /**
@@ -463,61 +462,61 @@ public class PageFactoryFilterTest {
     /**
      * Should throw InvalidDataAccessApiUsageException when try LIKE with Number using Specifications
      */
-    @Test(expected = InvalidDataAccessApiUsageException.class)
+    @Test
     public void likeFilterNumberSpecifications() {
         pageDataRequest.getFilters().add(new FilterRequest("civilStatus", "1", FilterRequest.OPERATIONS.LIKE));
 
-        personRepository.findAll(pageFactory.getSpecifications(pageDataRequest.getFilters()), pageFactory.pageRequest(pageDataRequest));
+        assertThrows(InvalidDataAccessApiUsageException.class, () -> personRepository.findAll(pageFactory.getSpecifications(pageDataRequest.getFilters()), pageFactory.pageRequest(pageDataRequest)));
     }
 
     /**
      * Should throw RagdeValidationException when try LIKE with Number using Predicate
      */
-    @Test(expected = RagdeValidationException.class)
+    @Test
     public void likeFilterNumberPredicate() {
         pageDataRequest.getFilters().add(new FilterRequest("civilStatus", "1", FilterRequest.OPERATIONS.LIKE));
 
-        personRepository.findAll(pageFactory.getPredicate(pageDataRequest.getFilters(), QPerson.person), pageFactory.pageRequest(pageDataRequest));
+        assertThrows(RagdeValidationException.class, () -> personRepository.findAll(pageFactory.getPredicate(pageDataRequest.getFilters(), QPerson.person), pageFactory.pageRequest(pageDataRequest)));
     }
 
     /**
      * Should throw InvalidDataAccessApiUsageException when try LIKE with LocalDate using Specifications
      */
-    @Test(expected = InvalidDataAccessApiUsageException.class)
+    @Test
     public void likeFilterLocalDateSpecifications() {
         pageDataRequest.getFilters().add(new FilterRequest("birthday", TEST_BIRTHDAY1, FilterRequest.OPERATIONS.LIKE));
 
-        personRepository.findAll(pageFactory.getSpecifications(pageDataRequest.getFilters()), pageFactory.pageRequest(pageDataRequest));
+        assertThrows(InvalidDataAccessApiUsageException.class, () -> personRepository.findAll(pageFactory.getSpecifications(pageDataRequest.getFilters()), pageFactory.pageRequest(pageDataRequest)));
     }
 
     /**
      * Should throw RagdeValidationException when try LIKE with LocalDate using Predicate
      */
-    @Test(expected = RagdeValidationException.class)
+    @Test
     public void likeFilterLocalDatePredicate() {
         pageDataRequest.getFilters().add(new FilterRequest("birthday", TEST_BIRTHDAY1, FilterRequest.OPERATIONS.LIKE));
 
-        personRepository.findAll(pageFactory.getPredicate(pageDataRequest.getFilters(), QPerson.person), pageFactory.pageRequest(pageDataRequest));
+        assertThrows(RagdeValidationException.class, () -> personRepository.findAll(pageFactory.getPredicate(pageDataRequest.getFilters(), QPerson.person), pageFactory.pageRequest(pageDataRequest)));
     }
 
     /**
      * Should throw InvalidDataAccessApiUsageException when try LIKE with LocalDateTime using Specifications
      */
-    @Test(expected = InvalidDataAccessApiUsageException.class)
+    @Test
     public void likeFilterLocalDateTimeSpecifications() {
         pageDataRequest.getFilters().add(new FilterRequest("createdAt", "2000-10-25T19:23:55Z", FilterRequest.OPERATIONS.LIKE));
 
-        personRepository.findAll(pageFactory.getSpecifications(pageDataRequest.getFilters()), pageFactory.pageRequest(pageDataRequest));
+        assertThrows(InvalidDataAccessApiUsageException.class, () -> personRepository.findAll(pageFactory.getSpecifications(pageDataRequest.getFilters()), pageFactory.pageRequest(pageDataRequest)));
     }
 
     /**
      * Should throw RagdeValidationException when try LIKE with LocalDateTime using Predicate
      */
-    @Test(expected = RagdeValidationException.class)
+    @Test
     public void likeFilterLocalDateTimePredicate() {
         pageDataRequest.getFilters().add(new FilterRequest("createdAt", "2000-10-25T19:23:55Z", FilterRequest.OPERATIONS.LIKE));
 
-        personRepository.findAll(pageFactory.getPredicate(pageDataRequest.getFilters(), QPerson.person), pageFactory.pageRequest(pageDataRequest));
+        assertThrows(RagdeValidationException.class, () -> personRepository.findAll(pageFactory.getPredicate(pageDataRequest.getFilters(), QPerson.person), pageFactory.pageRequest(pageDataRequest)));
     }
 
     /**
@@ -539,61 +538,61 @@ public class PageFactoryFilterTest {
     /**
      * Should throw InvalidDataAccessApiUsageException when try STARTS_WITH with Number using Specifications
      */
-    @Test(expected = InvalidDataAccessApiUsageException.class)
+    @Test
     public void startsWithFilterNumberSpecifications() {
         pageDataRequest.getFilters().add(new FilterRequest("civilStatus", "1", FilterRequest.OPERATIONS.STARTS_WITH));
 
-        personRepository.findAll(pageFactory.getSpecifications(pageDataRequest.getFilters()), pageFactory.pageRequest(pageDataRequest));
+        assertThrows(InvalidDataAccessApiUsageException.class, () -> personRepository.findAll(pageFactory.getSpecifications(pageDataRequest.getFilters()), pageFactory.pageRequest(pageDataRequest)));
     }
 
     /**
      * Should throw RagdeValidationException when try STARTS_WITH with Number using Predicate
      */
-    @Test(expected = RagdeValidationException.class)
+    @Test
     public void startsWithFilterNumberPredicate() {
         pageDataRequest.getFilters().add(new FilterRequest("civilStatus", "1", FilterRequest.OPERATIONS.STARTS_WITH));
 
-        personRepository.findAll(pageFactory.getPredicate(pageDataRequest.getFilters(), QPerson.person), pageFactory.pageRequest(pageDataRequest));
+        assertThrows(RagdeValidationException.class, () -> personRepository.findAll(pageFactory.getPredicate(pageDataRequest.getFilters(), QPerson.person), pageFactory.pageRequest(pageDataRequest)));
     }
 
     /**
      * Should throw InvalidDataAccessApiUsageException when try STARTS_WITH with LocalDate using Specifications
      */
-    @Test(expected = InvalidDataAccessApiUsageException.class)
+    @Test
     public void startsWithFilterLocalDateSpecifications() {
         pageDataRequest.getFilters().add(new FilterRequest("birthday", TEST_BIRTHDAY1, FilterRequest.OPERATIONS.STARTS_WITH));
 
-        personRepository.findAll(pageFactory.getSpecifications(pageDataRequest.getFilters()), pageFactory.pageRequest(pageDataRequest));
+        assertThrows(InvalidDataAccessApiUsageException.class, () -> personRepository.findAll(pageFactory.getSpecifications(pageDataRequest.getFilters()), pageFactory.pageRequest(pageDataRequest)));
     }
 
     /**
      * Should throw RagdeValidationException when try STARTS_WITH with LocalDate using Predicate
      */
-    @Test(expected = RagdeValidationException.class)
+    @Test
     public void startsWithFilterLocalDatePredicate() {
         pageDataRequest.getFilters().add(new FilterRequest("birthday", TEST_BIRTHDAY1, FilterRequest.OPERATIONS.STARTS_WITH));
 
-        personRepository.findAll(pageFactory.getPredicate(pageDataRequest.getFilters(), QPerson.person), pageFactory.pageRequest(pageDataRequest));
+        assertThrows(RagdeValidationException.class, () -> personRepository.findAll(pageFactory.getPredicate(pageDataRequest.getFilters(), QPerson.person), pageFactory.pageRequest(pageDataRequest)));
     }
 
     /**
      * Should throw InvalidDataAccessApiUsageException when try STARTS_WITH with LocalDateTime using Specifications
      */
-    @Test(expected = InvalidDataAccessApiUsageException.class)
+    @Test
     public void startsWithFilterLocalDateTimeSpecifications() {
         pageDataRequest.getFilters().add(new FilterRequest("createdAt", "2000-10-25T19:23:55Z", FilterRequest.OPERATIONS.STARTS_WITH));
 
-        personRepository.findAll(pageFactory.getSpecifications(pageDataRequest.getFilters()), pageFactory.pageRequest(pageDataRequest));
+        assertThrows(InvalidDataAccessApiUsageException.class, () -> personRepository.findAll(pageFactory.getSpecifications(pageDataRequest.getFilters()), pageFactory.pageRequest(pageDataRequest)));
     }
 
     /**
      * Should throw RagdeValidationException when try STARTS_WITH with LocalDateTime using Predicate
      */
-    @Test(expected = RagdeValidationException.class)
+    @Test
     public void startsWithFilterLocalDateTimePredicate() {
         pageDataRequest.getFilters().add(new FilterRequest("createdAt", "2000-10-25T19:23:55Z", FilterRequest.OPERATIONS.STARTS_WITH));
 
-        personRepository.findAll(pageFactory.getPredicate(pageDataRequest.getFilters(), QPerson.person), pageFactory.pageRequest(pageDataRequest));
+        assertThrows(RagdeValidationException.class, () -> personRepository.findAll(pageFactory.getPredicate(pageDataRequest.getFilters(), QPerson.person), pageFactory.pageRequest(pageDataRequest)));
     }
 
     /**
@@ -613,61 +612,61 @@ public class PageFactoryFilterTest {
     /**
      * Should throw InvalidDataAccessApiUsageException when try ENDS_WITH with Number using Specifications
      */
-    @Test(expected = InvalidDataAccessApiUsageException.class)
+    @Test
     public void endsWithFilterNumberSpecifications() {
         pageDataRequest.getFilters().add(new FilterRequest("civilStatus", "1", FilterRequest.OPERATIONS.ENDS_WITH));
 
-        personRepository.findAll(pageFactory.getSpecifications(pageDataRequest.getFilters()), pageFactory.pageRequest(pageDataRequest));
+        assertThrows(InvalidDataAccessApiUsageException.class, () -> personRepository.findAll(pageFactory.getSpecifications(pageDataRequest.getFilters()), pageFactory.pageRequest(pageDataRequest)));
     }
 
     /**
      * Should throw RagdeValidationException when try ENDS_WITH with Number using Predicate
      */
-    @Test(expected = RagdeValidationException.class)
+    @Test
     public void endsWithFilterNumberPredicate() {
         pageDataRequest.getFilters().add(new FilterRequest("civilStatus", "1", FilterRequest.OPERATIONS.ENDS_WITH));
 
-        personRepository.findAll(pageFactory.getPredicate(pageDataRequest.getFilters(), QPerson.person), pageFactory.pageRequest(pageDataRequest));
+        assertThrows(RagdeValidationException.class, () -> personRepository.findAll(pageFactory.getPredicate(pageDataRequest.getFilters(), QPerson.person), pageFactory.pageRequest(pageDataRequest)));
     }
 
     /**
      * Should throw InvalidDataAccessApiUsageException when try ENDS_WITH with LocalDate using Specifications
      */
-    @Test(expected = InvalidDataAccessApiUsageException.class)
+    @Test
     public void endsWithFilterLocalDateSpecifications() {
         pageDataRequest.getFilters().add(new FilterRequest("birthday", TEST_BIRTHDAY1, FilterRequest.OPERATIONS.ENDS_WITH));
 
-        personRepository.findAll(pageFactory.getSpecifications(pageDataRequest.getFilters()), pageFactory.pageRequest(pageDataRequest));
+        assertThrows(InvalidDataAccessApiUsageException.class, () -> personRepository.findAll(pageFactory.getSpecifications(pageDataRequest.getFilters()), pageFactory.pageRequest(pageDataRequest)));
     }
 
     /**
      * Should throw RagdeValidationException when try ENDS_WITH with LocalDate using Predicate
      */
-    @Test(expected = RagdeValidationException.class)
+    @Test
     public void endsWithFilterLocalDatePredicate() {
         pageDataRequest.getFilters().add(new FilterRequest("birthday", TEST_BIRTHDAY1, FilterRequest.OPERATIONS.ENDS_WITH));
 
-        personRepository.findAll(pageFactory.getPredicate(pageDataRequest.getFilters(), QPerson.person), pageFactory.pageRequest(pageDataRequest));
+        assertThrows(RagdeValidationException.class, () -> personRepository.findAll(pageFactory.getPredicate(pageDataRequest.getFilters(), QPerson.person), pageFactory.pageRequest(pageDataRequest)));
     }
 
     /**
      * Should throw InvalidDataAccessApiUsageException when try ENDS_WITH with LocalDateTime using Specifications
      */
-    @Test(expected = InvalidDataAccessApiUsageException.class)
+    @Test
     public void endsWithFilterLocalDateTimeSpecifications() {
         pageDataRequest.getFilters().add(new FilterRequest("createdAt", "2000-10-25T19:23:55Z", FilterRequest.OPERATIONS.ENDS_WITH));
 
-        personRepository.findAll(pageFactory.getSpecifications(pageDataRequest.getFilters()), pageFactory.pageRequest(pageDataRequest));
+        assertThrows(InvalidDataAccessApiUsageException.class, () -> personRepository.findAll(pageFactory.getSpecifications(pageDataRequest.getFilters()), pageFactory.pageRequest(pageDataRequest)));
     }
 
     /**
      * Should throw RagdeValidationException when try ENDS_WITH with LocalDateTime using Predicate
      */
-    @Test(expected = RagdeValidationException.class)
+    @Test
     public void endsWithFilterLocalDateTimePredicate() {
         pageDataRequest.getFilters().add(new FilterRequest("createdAt", "2000-10-25T19:23:55Z", FilterRequest.OPERATIONS.ENDS_WITH));
 
-        personRepository.findAll(pageFactory.getPredicate(pageDataRequest.getFilters(), QPerson.person), pageFactory.pageRequest(pageDataRequest));
+        assertThrows(RagdeValidationException.class, () -> personRepository.findAll(pageFactory.getPredicate(pageDataRequest.getFilters(), QPerson.person), pageFactory.pageRequest(pageDataRequest)));
     }
 
     /**
